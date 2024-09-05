@@ -75,8 +75,8 @@ public final class SuperSpleef extends JavaPlugin {
 
         //shitty and experimental, NEZABUDNI, ZE TO TAM JE!!!!!!!!!!!!!!!!!!!!!!!
 
-        if (y == 1) {
-            findSafeSpawnLocation(world, mapWidth, mapLength, mapHeight);
+        if (y == 0) {
+            return findSafeSpawnLocation(world, mapWidth, mapLength, mapHeight);
         }
 
         // Return the location above the highest non-air block
@@ -87,6 +87,7 @@ public final class SuperSpleef extends JavaPlugin {
             Location location = findSafeSpawnLocation(spleefWorld, mapWidth, mapLength, mapHeight);
             player.teleport(location);
             player.sendMessage("The game has started! Good luck!");
+            player.setGameMode(GameMode.ADVENTURE);
             player.setScoreboard(getScoreboard());
         }
         updateScoreboard();

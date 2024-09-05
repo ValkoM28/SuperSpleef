@@ -26,6 +26,7 @@ public final class SuperSpleef extends JavaPlugin {
         loadConfigValues();
         getServer().getPluginManager().registerEvents(new SpleefListener(), this);
         getServer().getPluginManager().registerEvents(new DeathListener(this), this);
+        setupScoreboard();
         getLogger().info("SpleefMinigame has been enabled!");        // Plugin startup logic
 
     }
@@ -39,16 +40,8 @@ public final class SuperSpleef extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("spleef")) {
-            if (sender instanceof Player) {
-                Player player = (Player) sender;
-                player.sendMessage("Teleporting to the lobby...");
-                player.teleport(lobbyLocation);
-                startGame();
-                return true;
-            } else {
-                sender.sendMessage("This command can only be run by a player.");
-                return false;
-            }
+            startGame();
+            return true;
         }
         return false;
     }
@@ -81,11 +74,10 @@ public final class SuperSpleef extends JavaPlugin {
 
 
         //shitty and experimental, NEZABUDNI, ZE TO TAM JE!!!!!!!!!!!!!!!!!!!!!!!
-        /*
+
         if (y == 1) {
             findSafeSpawnLocation(world, mapWidth, mapLength, mapHeight);
         }
-        */
 
         // Return the location above the highest non-air block
         return new Location(world, randomX, y + 1, randomZ);

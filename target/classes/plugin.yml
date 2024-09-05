@@ -1,0 +1,8 @@
+name: SuperSpleef
+version: '1.0.1'
+main: me.iamnany.superspleef.SuperSpleef
+api-version: '1.21'
+commands:
+  spleef:
+    description: 'Start a Spleef game'
+    usage: '/spleef'

@@ -1,0 +1,10 @@
+spleef:
+  world: spleef_world
+  map:
+    width: 50
+    length: 50
+    height: 10
+  lobby:
+    x: 0
+    y: 100
+    z: 0

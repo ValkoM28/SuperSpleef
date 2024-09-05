@@ -46,9 +46,6 @@ public class SpleefListener implements Listener {
                     ItemStack itemStack = new ItemStack(Material.SNOWBALL, 1);
                     player.getInventory().addItem(itemStack);
                 }
-
-
-
                 event.getClickedBlock().setType(Material.AIR);
                 event.setCancelled(true);
             }

@@ -6,3 +6,6 @@ commands:
   spleef:
     description: 'Start a Spleef game'
     usage: '/spleef'
+  loadschem:
+    description: 'load arena'
+    usage: '/loadschem'

@@ -9,8 +9,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.*;
+import me.iamnany.superspleef.SchematicLoader;
+
+import java.util.Objects;
 
 public final class SuperSpleef extends JavaPlugin {
+    public String worldName;
+    public SchematicLoader schematicLoader;
+
+
     private World spleefWorld;
     private Location lobbyLocation;
     private int mapWidth;
@@ -20,39 +27,45 @@ public final class SuperSpleef extends JavaPlugin {
     private Scoreboard scoreboard;
     private Objective objective;
 
+
+
     @Override
-    public void onEnable() {
+    public void onEnable() {  // Plugin startup logic
         saveDefaultConfig();
         loadConfigValues();
         getServer().getPluginManager().registerEvents(new SpleefListener(), this);
         getServer().getPluginManager().registerEvents(new DeathListener(this), this);
+
         setupScoreboard();
-        getLogger().info("SpleefMinigame has been enabled!");        // Plugin startup logic
-
+        getLogger().info("SpleefMinigame has been enabled!");
     }
 
+
     @Override
-    public void onDisable() {
+    public void onDisable() {  // Plugin shutdown logic
         getLogger().info("SpleefMinigame has been disabled!");
-        // Plugin shutdown logic
     }
 
+
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {  //commands added
         if (command.getName().equalsIgnoreCase("spleef")) {
             startGame();
+            return true;
+        }
+        if (command.getName().equalsIgnoreCase("loadschem")) {
+            schematicLoader = new SchematicLoader(this, worldName);
+            schematicLoader.loadSchematic("mce");
             return true;
         }
         return false;
     }
 
-    private void loadConfigValues() {
+
+    private void loadConfigValues() {  //loads the user-manageable config file
         FileConfiguration config = getConfig();
-        String worldName = config.getString("spleef.world");
-        spleefWorld = Bukkit.getWorld(worldName);
-        if (spleefWorld == null) {
-            spleefWorld = Bukkit.createWorld(new WorldCreator(worldName));
-        }
+        worldName = config.getString("spleef.world");
+        spleefWorld = Bukkit.getWorld(Objects.requireNonNull(worldName));
         mapWidth = config.getInt("spleef.map.width");
         mapLength = config.getInt("spleef.map.length");
         mapHeight = config.getInt("spleef.map.height");

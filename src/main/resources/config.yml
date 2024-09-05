@@ -1,5 +1,5 @@
 spleef:
-  world: spleef_world
+  world: world
   map:
     width: 50
     length: 50

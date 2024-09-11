@@ -21,7 +21,6 @@ public final class SuperSpleef extends JavaPlugin {
 
     private Scoreboard scoreboard;
     private Objective objective;
-    private final SchematicLoader schematicLoader = new SchematicLoader(this, spleefWorld);
 
 
     @Override
@@ -49,6 +48,7 @@ public final class SuperSpleef extends JavaPlugin {
             return true;
         }
         if (command.getName().equalsIgnoreCase("loadschem")) {
+            SchematicLoader schematicLoader = new SchematicLoader(this, spleefWorld);
             schematicLoader.loadSchematic("mce");
             return true;
         }

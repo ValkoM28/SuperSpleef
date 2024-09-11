@@ -7,22 +7,19 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 
 public class SpleefListener implements Listener {
-    private HashMap<UUID, Long> lastInteractionTime = new HashMap<>();
-    private final long cooldownTime = 10; // Cooldown time in milliseconds (e.g., 1000ms = 1 second)
+    private final HashMap<UUID, Long> lastInteractionTime = new HashMap<>();
 
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
+    public void onPlayerInteract(PlayerInteractEvent event) {  //instant block breaking logic
         Player player = event.getPlayer();
 
         // Ensure the player is in adventure mode
@@ -33,11 +30,11 @@ public class SpleefListener implements Listener {
 
                 if (lastInteractionTime.containsKey(playerId)) {
                     long lastTime = lastInteractionTime.get(playerId);
+                    // Cooldown time in milliseconds (e.g., 1000ms = 1 second)
+                    long cooldownTime = 10;
                     if (currentTime - lastTime < cooldownTime) {
-                        player.sendMessage("You must wait before breaking another block!");
                         return;
                     }
-
             }
                 lastInteractionTime.put(playerId, currentTime);
 
@@ -54,6 +51,8 @@ public class SpleefListener implements Listener {
 
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent event) {
+        /* Implementing snowballs that erase blocks, now still given
+        to all players by default, kit management system coming in later ;) */
         Projectile projectile = event.getEntity();
         if (projectile.getType() == EntityType.SNOWBALL) {
             if (event.getHitBlock() != null) {

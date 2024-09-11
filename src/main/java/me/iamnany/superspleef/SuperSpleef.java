@@ -7,26 +7,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.*;
-import me.iamnany.superspleef.SchematicLoader;
 
 import java.util.Objects;
 
 public final class SuperSpleef extends JavaPlugin {
-    public String worldName;
-    public SchematicLoader schematicLoader;
-
-
     private World spleefWorld;
     private Location lobbyLocation;
+
     private int mapWidth;
     private int mapLength;
     private int mapHeight;
 
     private Scoreboard scoreboard;
     private Objective objective;
-
+    private final SchematicLoader schematicLoader = new SchematicLoader(this, spleefWorld);
 
 
     @Override
@@ -54,7 +49,6 @@ public final class SuperSpleef extends JavaPlugin {
             return true;
         }
         if (command.getName().equalsIgnoreCase("loadschem")) {
-            schematicLoader = new SchematicLoader(this, worldName);
             schematicLoader.loadSchematic("mce");
             return true;
         }
@@ -64,7 +58,7 @@ public final class SuperSpleef extends JavaPlugin {
 
     private void loadConfigValues() {  //loads the user-manageable config file
         FileConfiguration config = getConfig();
-        worldName = config.getString("spleef.world");
+        String worldName = config.getString("spleef.world");
         spleefWorld = Bukkit.getWorld(Objects.requireNonNull(worldName));
         mapWidth = config.getInt("spleef.map.width");
         mapLength = config.getInt("spleef.map.length");
@@ -75,26 +69,7 @@ public final class SuperSpleef extends JavaPlugin {
         lobbyLocation = new Location(spleefWorld, lobbyX, lobbyY, lobbyZ);
     }
 
-    private Location findSafeSpawnLocation(World world, int mapWidth, int mapLength, int mapHeight) {
-        int randomX = (int) (Math.random() * mapWidth) - mapWidth / 2;
-        int randomZ = (int) (Math.random() * mapLength) - mapLength / 2;
-        int y = mapHeight;
 
-        // Find the highest non-air block at the random location
-        while (world.getBlockAt(randomX, y, randomZ).getType() == Material.AIR && y > 0) {
-            y--;
-        }
-
-
-        //shitty and experimental, NEZABUDNI, ZE TO TAM JE!!!!!!!!!!!!!!!!!!!!!!!
-
-        if (y == 0) {
-            return findSafeSpawnLocation(world, mapWidth, mapLength, mapHeight);
-        }
-
-        // Return the location above the highest non-air block
-        return new Location(world, randomX, y + 1, randomZ);
-    }
     private void startGame() {
         for (Player player : spleefWorld.getPlayers()) {
             Location location = findSafeSpawnLocation(spleefWorld, mapWidth, mapLength, mapHeight);
@@ -104,12 +79,28 @@ public final class SuperSpleef extends JavaPlugin {
             player.setScoreboard(getScoreboard());
         }
         updateScoreboard();
-
     }
 
-    public Location getLobbyLocation() {
-        return lobbyLocation;
+
+    private Location findSafeSpawnLocation(World world, int mapWidth, int mapLength, int mapHeight) {
+        int randomX = (int) (Math.random() * mapWidth) - mapWidth / 2;
+        int randomZ = (int) (Math.random() * mapLength) - mapLength / 2;
+        int y = mapHeight;
+
+        // Find the highest non-air block at the random location
+        while (world.getBlockAt(randomX, y, randomZ).getType() == Material.AIR && y > 0) {
+            y--;
+        }
+        if (y == 0) {
+            return findSafeSpawnLocation(world, mapWidth, mapLength, mapHeight);
+        }
+        // Return the location above the highest non-air block
+        return new Location(world, randomX, y + 1, randomZ);
     }
+
+
+    public Location getLobbyLocation() {return lobbyLocation;}
+
 
     //Scoreboard handling
     private void setupScoreboard() {
@@ -120,6 +111,7 @@ public final class SuperSpleef extends JavaPlugin {
         updateScoreboard();
     }
 
+
     public void updateScoreboard() {
         int alivePlayers = (int) spleefWorld.getPlayers().stream()
                 .filter(player -> player.getGameMode() != GameMode.SPECTATOR)
@@ -128,10 +120,9 @@ public final class SuperSpleef extends JavaPlugin {
         score.setScore(alivePlayers);
     }
 
+
     public Scoreboard getScoreboard() {
         return scoreboard;
     }
 
 }
-
-

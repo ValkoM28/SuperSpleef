@@ -29,7 +29,7 @@ public final class SuperSpleef extends JavaPlugin {
         loadConfigValues();
         getServer().getPluginManager().registerEvents(new SpleefListener(), this);
         getServer().getPluginManager().registerEvents(new DeathListener(this), this);
-        getServer().getPluginManager().registerEvents()
+        //getServer().getPluginManager().registerEvents()
 
         setupScoreboard();
         getLogger().info("SpleefMinigame has been enabled!");

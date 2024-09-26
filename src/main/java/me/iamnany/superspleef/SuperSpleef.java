@@ -14,7 +14,7 @@ import java.util.Objects;
 public final class SuperSpleef extends JavaPlugin {
     private World spleefWorld;
     private Location lobbyLocation;
-
+    //hello
     private int mapWidth;
     private int mapLength;
     private int mapHeight;
@@ -29,6 +29,7 @@ public final class SuperSpleef extends JavaPlugin {
         loadConfigValues();
         getServer().getPluginManager().registerEvents(new SpleefListener(), this);
         getServer().getPluginManager().registerEvents(new DeathListener(this), this);
+        getServer().getPluginManager().registerEvents()
 
         setupScoreboard();
         getLogger().info("SpleefMinigame has been enabled!");

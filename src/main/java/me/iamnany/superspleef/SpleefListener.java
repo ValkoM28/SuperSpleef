@@ -60,4 +60,8 @@ public class SpleefListener implements Listener {
             }
         }
     }
+        /*
+        if (projectile.getType() == EntityType.ARROW) {
+
+    } */
 }

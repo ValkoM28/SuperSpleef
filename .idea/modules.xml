@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SuperSpleef.iml" filepath="$PROJECT_DIR$/SuperSpleef.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/SuperSpleef.iml" filepath="$PROJECT_DIR$/.idea/SuperSpleef.iml" />
     </modules>
   </component>
 </project>

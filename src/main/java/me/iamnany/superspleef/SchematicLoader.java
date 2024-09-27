@@ -4,6 +4,7 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
@@ -18,10 +19,18 @@ import java.io.IOException;
 public class SchematicLoader {
     private final World spleefWorld;
     private final SuperSpleef plugin;
-    // Janky af, take a look at it later
+    private final Location schematicLocation;
+
+    private final MapDimensions mapDimensions;
+
     public SchematicLoader(SuperSpleef plugin, World spleefWorld) {
         this.plugin = plugin;
         this.spleefWorld = spleefWorld;
+
+        this.schematicLocation = plugin.schematicLocation;
+        schematicLocation.setWorld(spleefWorld);
+
+        this.mapDimensions = plugin.getMapDimensions();
     }
 
     public void loadSchematic(String schematicName) {
@@ -38,25 +47,30 @@ public class SchematicLoader {
         }
 
         try (ClipboardReader reader = ClipboardFormats.findByFile(schematicFile).getReader(new FileInputStream(schematicFile))) {
-            ClipboardHolder clipboard = new ClipboardHolder(reader.read());
+            Clipboard clipboard = new ClipboardHolder(reader.read()).getClipboard();
             EditSession editSession = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(spleefWorld));
 
-            // Define the fixed location
-            double x = 0.0;
-            double y = 0.0;
-            double z = 0.0;
-            Location pasteLocation = new Location(spleefWorld, x, y, z);
-
             ForwardExtentCopy copy = new ForwardExtentCopy(
-                    clipboard.getClipboard(),
-                    clipboard.getClipboard().getRegion(),
-                    clipboard.getClipboard().getOrigin(),
+                    clipboard,
+                    clipboard.getRegion(),
+                    clipboard.getOrigin(),
                     editSession,
-                    BukkitAdapter.asBlockVector(pasteLocation)
+                    BukkitAdapter.asBlockVector(schematicLocation)
             );
 
+
             // Complete the operation
+
+            for (int x = mapDimensions.getMinX(); x <= mapDimensions.getMaxX(); x++) {
+                for (int y = mapDimensions.getMinY(); y <= mapDimensions.getMaxY(); y++) {
+                    for (int z = mapDimensions.getMinZ(); z <= mapDimensions.getMaxZ(); z++) {
+                        spleefWorld.getBlockAt(x, y, z).getState().update(true, false);
+                    }
+                }
+            }
             Operations.complete(copy);
+
+
         } catch (IOException | WorldEditException e) {
             e.printStackTrace();
         }

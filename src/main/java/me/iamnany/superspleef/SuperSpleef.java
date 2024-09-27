@@ -9,16 +9,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scoreboard.*;
 
+import java.util.Map;
 import java.util.Objects;
 
 public final class SuperSpleef extends JavaPlugin {
     private World spleefWorld;
-    private Location lobbyLocation;
-    //hello
-    private int mapWidth;
-    private int mapLength;
-    private int mapHeight;
 
+    //Locations
+    private Location lobbyLocation;
+    public Location schematicLocation;
+
+    //map dimensions
+    private MapDimensions mapDimensions;
+
+    //for scoreboard logic
     private Scoreboard scoreboard;
     private Objective objective;
 
@@ -45,6 +49,8 @@ public final class SuperSpleef extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {  //commands added
         if (command.getName().equalsIgnoreCase("spleef")) {
+            SchematicLoader schematicLoader = new SchematicLoader(this, spleefWorld);
+            schematicLoader.loadSchematic("mce");
             startGame();
             return true;
         }
@@ -61,19 +67,25 @@ public final class SuperSpleef extends JavaPlugin {
         FileConfiguration config = getConfig();
         String worldName = config.getString("spleef.world");
         spleefWorld = Bukkit.getWorld(Objects.requireNonNull(worldName));
-        mapWidth = config.getInt("spleef.map.width");
-        mapLength = config.getInt("spleef.map.length");
-        mapHeight = config.getInt("spleef.map.height");
+        double schematicX = config.getDouble("spleef.schematic_placement.x");
+        double schematicY = config.getDouble("spleef.schematic_placement.y");
+        double schematicZ = config.getDouble("spleef.schematic_placement.z");
+        schematicLocation = new Location(null, schematicX, schematicY, schematicZ);
+
+        mapDimensions = new MapDimensions(config.getInt("spleef.map.width"),
+                config.getInt("spleef.map.length"), config.getInt("spleef.map.height"), schematicLocation);
+
         double lobbyX = config.getDouble("spleef.lobby.x");
         double lobbyY = config.getDouble("spleef.lobby.y");
         double lobbyZ = config.getDouble("spleef.lobby.z");
         lobbyLocation = new Location(spleefWorld, lobbyX, lobbyY, lobbyZ);
+
     }
 
 
     private void startGame() {
         for (Player player : spleefWorld.getPlayers()) {
-            Location location = findSafeSpawnLocation(spleefWorld, mapWidth, mapLength, mapHeight);
+            Location location = findSafeSpawnLocation(spleefWorld, mapDimensions);
             player.teleport(location);
             player.sendMessage("The game has started! Good luck!");
             player.setGameMode(GameMode.ADVENTURE);
@@ -83,17 +95,17 @@ public final class SuperSpleef extends JavaPlugin {
     }
 
 
-    private Location findSafeSpawnLocation(World world, int mapWidth, int mapLength, int mapHeight) {
-        int randomX = (int) (Math.random() * mapWidth) - mapWidth / 2;
-        int randomZ = (int) (Math.random() * mapLength) - mapLength / 2;
-        int y = mapHeight;
+    private Location findSafeSpawnLocation(World world, MapDimensions mapDimensions) {
+        int randomX = (int) (Math.random() * (mapDimensions.getMaxX() - mapDimensions.getMinX()) + mapDimensions.getMinX());
+        int randomZ = (int) (Math.random() * (mapDimensions.getMaxZ() - mapDimensions.getMinZ()) + mapDimensions.getMinZ());
+        int y = mapDimensions.getMaxY();
 
         // Find the highest non-air block at the random location
         while (world.getBlockAt(randomX, y, randomZ).getType() == Material.AIR && y > 0) {
             y--;
         }
-        if (y == 0) {
-            return findSafeSpawnLocation(world, mapWidth, mapLength, mapHeight);
+        if (y == mapDimensions.getMinY()) {
+            return findSafeSpawnLocation(world, mapDimensions);
         }
         // Return the location above the highest non-air block
         return new Location(world, randomX, y + 1, randomZ);
@@ -126,4 +138,9 @@ public final class SuperSpleef extends JavaPlugin {
         return scoreboard;
     }
 
+
+    public MapDimensions getMapDimensions() {
+        return mapDimensions;
+    }
 }
+

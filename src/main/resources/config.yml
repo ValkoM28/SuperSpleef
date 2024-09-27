@@ -8,3 +8,8 @@ spleef:
     x: 0
     y: 100
     z: 0
+  schematic_placement:
+    x: 0
+    y: 0
+    z: 0
+  kill_y_value: 0

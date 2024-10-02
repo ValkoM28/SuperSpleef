@@ -21,28 +21,16 @@ public class MapDimensions {
         this.centerZ = center.getBlockZ();
     }
 
-    public int getMaxX() {
-        return centerX + (mapWidth/2);
-    }
+    public int getMaxX() { return centerX + (mapWidth/2); }
 
-    public int getMinX() {
-        return centerX - (mapWidth/2);
-    }
+    public int getMinX() { return centerX - (mapWidth/2); }
 
-    public int getMaxY() {
-        return centerY + mapHeight;
-    }
+    public int getMaxY() { return centerY + mapHeight; }
 
-    public int getMinY() {
-        return centerY;
-    }
+    public int getMinY() { return centerY; }
 
-    public int getMaxZ() {
-        return centerZ + (mapLength/2);
-    }
+    public int getMaxZ() { return centerZ + (mapLength/2); }
 
-    public int getMinZ() {
-        return centerZ - (mapLength/2);
-    }
+    public int getMinZ() { return centerZ - (mapLength/2); }
 
 }

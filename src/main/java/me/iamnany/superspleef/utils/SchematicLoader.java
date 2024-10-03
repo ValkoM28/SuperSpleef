@@ -15,20 +15,18 @@ import org.bukkit.World;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Objects;
 
 public class SchematicLoader {
     private final World spleefWorld;
     private final SuperSpleef plugin;
-    //private final Location schematicLocation;
 
     private final MapDimensions mapDimensions;
 
     public SchematicLoader(SuperSpleef plugin, World spleefWorld) {
         this.plugin = plugin;
         this.spleefWorld = spleefWorld;
-
-        //this.schematicLocation = plugin.schematicLocation;
-        //schematicLocation.setWorld(spleefWorld);
 
         this.mapDimensions = plugin.getMapDimensions();
     }
@@ -46,7 +44,8 @@ public class SchematicLoader {
             return;
         }
 
-        try (ClipboardReader reader = ClipboardFormats.findByFile(schematicFile).getReader(new FileInputStream(schematicFile))) {
+        try (ClipboardReader reader = Objects.requireNonNull(ClipboardFormats.findByFile(schematicFile))
+                .getReader(Files.newInputStream(schematicFile.toPath()))) {
             Clipboard clipboard = new ClipboardHolder(reader.read()).getClipboard();
             EditSession editSession = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(spleefWorld));
 

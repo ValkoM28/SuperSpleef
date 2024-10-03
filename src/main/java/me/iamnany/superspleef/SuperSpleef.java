@@ -8,17 +8,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scoreboard.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.Objects;
 
 public final class SuperSpleef extends JavaPlugin {
     private World spleefWorld;
-
-    //Locations
     private Location lobbyLocation;
-    public Location schematicLocation;
 
+    public Location schematicLocation;
+    private String schematicName;
     //map dimensions
     private MapDimensions mapDimensions;
 
@@ -50,27 +50,30 @@ public final class SuperSpleef extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {  //commands added
         if (command.getName().equalsIgnoreCase("spleef")) {
             SchematicLoader schematicLoader = new SchematicLoader(this, spleefWorld);
-            schematicLoader.loadSchematic("mce");
+            schematicLoader.loadSchematic(schematicName, schematicLocation); //test this
             startGame();
             return true;
         }
         if (command.getName().equalsIgnoreCase("loadschem")) {
             SchematicLoader schematicLoader = new SchematicLoader(this, spleefWorld);
-            schematicLoader.loadSchematic("mce");
+            schematicLoader.loadSchematic(schematicName, schematicLocation);  //test this
             return true;
         }
         return false;
     }
 
-
+    //try to make this look like a code and not like garbage
     private void loadConfigValues() {  //loads the user-manageable config file
         FileConfiguration config = getConfig();
         String worldName = config.getString("spleef.world");
         spleefWorld = Bukkit.getWorld(Objects.requireNonNull(worldName));
+
         double schematicX = config.getDouble("spleef.schematic_placement.x");
         double schematicY = config.getDouble("spleef.schematic_placement.y");
         double schematicZ = config.getDouble("spleef.schematic_placement.z");
-        schematicLocation = new Location(null, schematicX, schematicY, schematicZ);
+
+        schematicLocation = new Location(spleefWorld, schematicX, schematicY, schematicZ);
+        schematicName = config.getString("spleef.schematic_name");
 
         mapDimensions = new MapDimensions(config.getInt("spleef.map.width"),
                 config.getInt("spleef.map.length"), config.getInt("spleef.map.height"), schematicLocation);
@@ -94,8 +97,8 @@ public final class SuperSpleef extends JavaPlugin {
         updateScoreboard();
     }
 
-
-    private Location findSafeSpawnLocation(World world, MapDimensions mapDimensions) {
+    @NotNull
+    private Location findSafeSpawnLocation(@NotNull World world, @NotNull MapDimensions mapDimensions) {
         int randomX = (int) (Math.random() * (mapDimensions.getMaxX() - mapDimensions.getMinX()) + mapDimensions.getMinX());
         int randomZ = (int) (Math.random() * (mapDimensions.getMaxZ() - mapDimensions.getMinZ()) + mapDimensions.getMinZ());
         int y = mapDimensions.getMaxY();
@@ -112,7 +115,7 @@ public final class SuperSpleef extends JavaPlugin {
     }
 
 
-    public Location getLobbyLocation() {return lobbyLocation;}
+    public Location getLobbyLocation() { return lobbyLocation; }
 
 
     //Scoreboard handling

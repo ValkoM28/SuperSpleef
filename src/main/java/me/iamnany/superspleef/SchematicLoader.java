@@ -19,7 +19,7 @@ import java.io.IOException;
 public class SchematicLoader {
     private final World spleefWorld;
     private final SuperSpleef plugin;
-    private final Location schematicLocation;
+    //private final Location schematicLocation;
 
     private final MapDimensions mapDimensions;
 
@@ -27,13 +27,13 @@ public class SchematicLoader {
         this.plugin = plugin;
         this.spleefWorld = spleefWorld;
 
-        this.schematicLocation = plugin.schematicLocation;
-        schematicLocation.setWorld(spleefWorld);
+        //this.schematicLocation = plugin.schematicLocation;
+        //schematicLocation.setWorld(spleefWorld);
 
         this.mapDimensions = plugin.getMapDimensions();
     }
 
-    public void loadSchematic(String schematicName) {
+    public void loadSchematic(String schematicName, Location schematicLocation) {
         if (spleefWorld == null) {
             System.err.println("World not found");
             return;

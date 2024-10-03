@@ -1,5 +1,7 @@
-package me.iamnany.superspleef;
+package me.iamnany.superspleef.utils;
 
+import me.iamnany.superspleef.MapDimensions;
+import me.iamnany.superspleef.SuperSpleef;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;

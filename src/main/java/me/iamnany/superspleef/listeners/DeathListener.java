@@ -1,5 +1,6 @@
-package me.iamnany.superspleef;
+package me.iamnany.superspleef.listeners;
 
+import me.iamnany.superspleef.SuperSpleef;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

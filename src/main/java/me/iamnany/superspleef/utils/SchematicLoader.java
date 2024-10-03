@@ -1,4 +1,4 @@
-package me.iamnany.superspleef;
+package me.iamnany.superspleef.utils;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
@@ -10,10 +10,11 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.session.ClipboardHolder;
+import me.iamnany.superspleef.MapDimensions;
+import me.iamnany.superspleef.SuperSpleef;
 import org.bukkit.Location;
 import org.bukkit.World;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Objects;

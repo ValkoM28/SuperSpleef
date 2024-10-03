@@ -1,4 +1,4 @@
-package me.iamnany.superspleef;
+package me.iamnany.superspleef.listeners;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;

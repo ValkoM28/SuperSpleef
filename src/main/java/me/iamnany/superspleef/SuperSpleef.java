@@ -1,41 +1,36 @@
 package me.iamnany.superspleef;
 
+import me.iamnany.superspleef.utils.ConfigLoader;
+import me.iamnany.superspleef.listeners.DeathListener;
+import me.iamnany.superspleef.listeners.SpleefListener;
+import me.iamnany.superspleef.utils.SchematicLoader;
+import me.iamnany.superspleef.utils.ScoreboardHandler;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scoreboard.*;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
-import java.util.Objects;
+import org.jetbrains.annotations.TestOnly;
 
 public final class SuperSpleef extends JavaPlugin {
+    private ConfigLoader configLoader;
     private World spleefWorld;
     private Location lobbyLocation;
 
-    public Location schematicLocation;
-    private String schematicName;
-    //map dimensions
-    private MapDimensions mapDimensions;
-
-    //for scoreboard logic
-    private Scoreboard scoreboard;
-    private Objective objective;
-
+    public ScoreboardHandler scoreboardHandler;
 
     @Override
-    public void onEnable() {  // Plugin startup logic
-        saveDefaultConfig();
-        loadConfigValues();
+    public void onEnable() {
+        saveDefaultConfig();// Plugin startup logic
+        temporaryParityMethod();  //I am going to kill you, if you leave it like this
+
         getServer().getPluginManager().registerEvents(new SpleefListener(), this);
         getServer().getPluginManager().registerEvents(new DeathListener(this), this);
         //getServer().getPluginManager().registerEvents()
-
-        setupScoreboard();
+        scoreboardHandler = new ScoreboardHandler(this, spleefWorld);
         getLogger().info("SpleefMinigame has been enabled!");
     }
 
@@ -45,56 +40,40 @@ public final class SuperSpleef extends JavaPlugin {
         getLogger().info("SpleefMinigame has been disabled!");
     }
 
+    //implement this like a human being please
+    @TestOnly
+    private void temporaryParityMethod() {
+        configLoader = new ConfigLoader(this);
+        spleefWorld = configLoader.spleefWorld;
+        lobbyLocation = configLoader.lobbyLocation;
+    }
+
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {  //commands added
+    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {  //commands added
         if (command.getName().equalsIgnoreCase("spleef")) {
             SchematicLoader schematicLoader = new SchematicLoader(this, spleefWorld);
-            schematicLoader.loadSchematic(schematicName, schematicLocation); //test this
+            schematicLoader.loadSchematic(configLoader.schematicName, configLoader.schematicLocation); //test this
             startGame();
             return true;
         }
         if (command.getName().equalsIgnoreCase("loadschem")) {
             SchematicLoader schematicLoader = new SchematicLoader(this, spleefWorld);
-            schematicLoader.loadSchematic(schematicName, schematicLocation);  //test this
+            schematicLoader.loadSchematic(configLoader.schematicName, configLoader.schematicLocation);  //test this
             return true;
         }
         return false;
     }
 
-    //try to make this look like a code and not like garbage
-    private void loadConfigValues() {  //loads the user-manageable config file
-        FileConfiguration config = getConfig();
-        String worldName = config.getString("spleef.world");
-        spleefWorld = Bukkit.getWorld(Objects.requireNonNull(worldName));
-
-        double schematicX = config.getDouble("spleef.schematic_placement.x");
-        double schematicY = config.getDouble("spleef.schematic_placement.y");
-        double schematicZ = config.getDouble("spleef.schematic_placement.z");
-
-        schematicLocation = new Location(spleefWorld, schematicX, schematicY, schematicZ);
-        schematicName = config.getString("spleef.schematic_name");
-
-        mapDimensions = new MapDimensions(config.getInt("spleef.map.width"),
-                config.getInt("spleef.map.length"), config.getInt("spleef.map.height"), schematicLocation);
-
-        double lobbyX = config.getDouble("spleef.lobby.x");
-        double lobbyY = config.getDouble("spleef.lobby.y");
-        double lobbyZ = config.getDouble("spleef.lobby.z");
-        lobbyLocation = new Location(spleefWorld, lobbyX, lobbyY, lobbyZ);
-
-    }
-
-
     private void startGame() {
         for (Player player : spleefWorld.getPlayers()) {
-            Location location = findSafeSpawnLocation(spleefWorld, mapDimensions);
+            Location location = findSafeSpawnLocation(spleefWorld, configLoader.mapDimensions);
             player.teleport(location);
             player.sendMessage("The game has started! Good luck!");
             player.setGameMode(GameMode.ADVENTURE);
             player.setScoreboard(getScoreboard());
         }
-        updateScoreboard();
+        scoreboardHandler.updateScoreboard();
     }
 
     @NotNull
@@ -117,33 +96,13 @@ public final class SuperSpleef extends JavaPlugin {
 
     public Location getLobbyLocation() { return lobbyLocation; }
 
-
-    //Scoreboard handling
-    private void setupScoreboard() {
-        ScoreboardManager manager = Bukkit.getScoreboardManager();
-        scoreboard = manager.getNewScoreboard();
-        objective = scoreboard.registerNewObjective("alivePlayers", "dummy", "Players Alive");
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        updateScoreboard();
-    }
-
-
-    public void updateScoreboard() {
-        int alivePlayers = (int) spleefWorld.getPlayers().stream()
-                .filter(player -> player.getGameMode() != GameMode.SPECTATOR)
-                .count();
-        Score score = objective.getScore("Alive:");
-        score.setScore(alivePlayers);
-    }
-
-
+    @TestOnly
     public Scoreboard getScoreboard() {
-        return scoreboard;
+        return scoreboardHandler.scoreboard;
     }
 
-
+    @TestOnly
     public MapDimensions getMapDimensions() {
-        return mapDimensions;
+        return configLoader.mapDimensions;
     }
 }
-

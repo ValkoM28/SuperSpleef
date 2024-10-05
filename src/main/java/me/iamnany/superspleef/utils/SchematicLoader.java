@@ -20,6 +20,10 @@ import java.nio.file.Files;
 import java.util.Objects;
 
 public class SchematicLoader {
+    /*
+    This class ensures the loading of schematic files for the map reset. The schematic loader is called everytime a game
+    starts (maybe do it, so it activates after the game finishes?)
+     */
     private final World spleefWorld;
     private final SuperSpleef plugin;
 
@@ -58,8 +62,9 @@ public class SchematicLoader {
                     BukkitAdapter.asBlockVector(schematicLocation)
             );
 
-
-            // Complete the operation
+            /*
+            This manually resets every block in the schematic radius to ensure, that clients are synced with the server
+             */
 
             for (int x = mapDimensions.getMinX(); x <= mapDimensions.getMaxX(); x++) {
                 for (int y = mapDimensions.getMinY(); y <= mapDimensions.getMaxY(); y++) {

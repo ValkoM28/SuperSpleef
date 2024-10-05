@@ -27,7 +27,7 @@ public final class SuperSpleef extends JavaPlugin {
         saveDefaultConfig();// Plugin startup logic
         temporaryParityMethod();  //I am going to kill you, if you leave it like this
 
-        getServer().getPluginManager().registerEvents(new SpleefListener(), this);
+        getServer().getPluginManager().registerEvents(new SpleefListener(this), this);
         getServer().getPluginManager().registerEvents(new DeathListener(this), this);
         //getServer().getPluginManager().registerEvents()
         scoreboardHandler = new ScoreboardHandler(this, spleefWorld);
@@ -69,8 +69,10 @@ public final class SuperSpleef extends JavaPlugin {
         for (Player player : spleefWorld.getPlayers()) {
             Location location = findSafeSpawnLocation(spleefWorld, configLoader.mapDimensions);
             player.teleport(location);
-            player.sendMessage("The game has started! Good luck!");
+            player.getInventory().clear();
             player.setGameMode(GameMode.ADVENTURE);
+
+            player.sendMessage("The game has started! Good luck!");
             player.setScoreboard(getScoreboard());
         }
         scoreboardHandler.updateScoreboard();
@@ -105,4 +107,5 @@ public final class SuperSpleef extends JavaPlugin {
     public MapDimensions getMapDimensions() {
         return configLoader.mapDimensions;
     }
+
 }

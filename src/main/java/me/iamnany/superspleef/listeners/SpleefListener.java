@@ -1,22 +1,44 @@
 package me.iamnany.superspleef.listeners;
+import me.iamnany.superspleef.SuperSpleef;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 
 public class SpleefListener implements Listener {
+    /*
+    This class is a General lister for the plugin.
+    There is a plan to have everything in its separate class, and it will be executed during the progress of development.
+    For now, you can find logic for block breaking, snowballs and explosive bows, as well as code for disabling crafting and item drops.
+
+    TODO: Create separate classes for every event type, Fix bug in onPlayerInteract method
+     */
+
     private final HashMap<UUID, Long> lastInteractionTime = new HashMap<>();
+    private final SuperSpleef plugin;
+
+    public SpleefListener(SuperSpleef plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {  //instant block breaking logic
@@ -57,11 +79,37 @@ public class SpleefListener implements Listener {
         if (projectile.getType() == EntityType.SNOWBALL) {
             if (event.getHitBlock() != null) {
                 event.getHitBlock().setType(Material.AIR);
+                plugin.getLogger().info("testMessage");
+            }
+        }
+        if (projectile.getType() == EntityType.ARROW) {
+            if (event.getHitBlock() != null) {
+                projectile.getWorld().createExplosion(projectile, 5.0F, false, true);
+                projectile.remove();
             }
         }
     }
-        /*
-        if (projectile.getType() == EntityType.ARROW) {
 
-    } */
+
+    @EventHandler
+    public void onEntityExplode(EntityExplodeEvent event) {
+        plugin.getLogger().info("explosion caught");
+        for (Block block : event.blockList()) {
+            // Break the block and prevent it from dropping items
+            block.setType(Material.AIR);  // Set the block to air, removing it without dropping items
+        }
+    }
+
+    @EventHandler
+    public void onPrepareCraft(PrepareItemCraftEvent event) {
+        CraftingInventory inventory = event.getInventory();
+
+        // Set the result to null to disable crafting
+        inventory.setResult(null);
+    }
+
+    @EventHandler
+    public void onItemDrop(PlayerDropItemEvent event) {
+        event.setCancelled(true);
+    }
 }

@@ -32,8 +32,8 @@ public class SchematicLoader {
     public SchematicLoader(SuperSpleef plugin, World spleefWorld) {
         this.plugin = plugin;
         this.spleefWorld = spleefWorld;
-
         this.mapDimensions = plugin.getMapDimensions();
+
     }
 
     public void loadSchematic(String schematicName, Location schematicLocation) {
@@ -64,6 +64,7 @@ public class SchematicLoader {
 
             /*
             This manually resets every block in the schematic radius to ensure, that clients are synced with the server
+            this is supposed to be a temporary solution, but I have not came up with anything better, so it probably stays.
              */
 
             for (int x = mapDimensions.getMinX(); x <= mapDimensions.getMaxX(); x++) {

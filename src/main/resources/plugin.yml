@@ -6,6 +6,23 @@ commands:
   spleef:
     description: 'Start a Spleef game'
     usage: '/spleef'
+    permission: superspleef.admin
+    permission-message: "You don't have permission to run the command"
   loadschem:
     description: 'load arena'
     usage: '/loadschem'
+    permission: superspleef.admin
+    permission-message: "You don't have permission to run the command"
+  spleefkit:
+    description: 'Choose a kit'
+    usage: '/spleefkit'
+    permission: superspleef.kit
+permissions:
+  superspleef.admin:
+    default: op
+  superspleef.kit:
+    default: true
+  superspleef.kit.snowballer:
+    default: false
+  superspleef.kit.archer:
+    default: false

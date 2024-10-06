@@ -1,5 +1,6 @@
 package me.iamnany.superspleef;
 
+import me.iamnany.superspleef.commands.KitCommand;
 import me.iamnany.superspleef.utils.ConfigLoader;
 import me.iamnany.superspleef.listeners.DeathListener;
 import me.iamnany.superspleef.listeners.SpleefListener;
@@ -7,8 +8,10 @@ import me.iamnany.superspleef.utils.SchematicLoader;
 import me.iamnany.superspleef.utils.ScoreboardHandler;
 import org.bukkit.*;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.bukkit.scoreboard.*;
@@ -23,12 +26,14 @@ public final class SuperSpleef extends JavaPlugin {
     public ScoreboardHandler scoreboardHandler;
 
     @Override
-    public void onEnable() {
-        saveDefaultConfig();// Plugin startup logic
+    public void onEnable() {  // Plugin startup logic
+        saveDefaultConfig();
         temporaryParityMethod();  //I am going to kill you, if you leave it like this
 
         getServer().getPluginManager().registerEvents(new SpleefListener(this), this);
         getServer().getPluginManager().registerEvents(new DeathListener(this), this);
+
+        getCommand("spleefkit").setExecutor(new KitCommand());
         //getServer().getPluginManager().registerEvents()
         scoreboardHandler = new ScoreboardHandler(this, spleefWorld);
         getLogger().info("SpleefMinigame has been enabled!");
@@ -39,15 +44,6 @@ public final class SuperSpleef extends JavaPlugin {
     public void onDisable() {  // Plugin shutdown logic
         getLogger().info("SpleefMinigame has been disabled!");
     }
-
-    //implement this like a human being please
-    @TestOnly
-    private void temporaryParityMethod() {
-        configLoader = new ConfigLoader(this);
-        spleefWorld = configLoader.spleefWorld;
-        lobbyLocation = configLoader.lobbyLocation;
-    }
-
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {  //commands added
@@ -62,6 +58,7 @@ public final class SuperSpleef extends JavaPlugin {
             schematicLoader.loadSchematic(configLoader.schematicName, configLoader.schematicLocation);  //test this
             return true;
         }
+
         return false;
     }
 
@@ -71,9 +68,14 @@ public final class SuperSpleef extends JavaPlugin {
             player.teleport(location);
             player.getInventory().clear();
             player.setGameMode(GameMode.ADVENTURE);
-
             player.sendMessage("The game has started! Good luck!");
             player.setScoreboard(getScoreboard());
+
+
+            if (player.hasPermission("superspleef.kit.archer")) {
+               player.getInventory().addItem(new ItemStack(Material.BOW));
+                player.getInventory().addItem(new ItemStack(Material.ARROW, 3));
+            }
         }
         scoreboardHandler.updateScoreboard();
     }
@@ -98,6 +100,14 @@ public final class SuperSpleef extends JavaPlugin {
 
     public Location getLobbyLocation() { return lobbyLocation; }
 
+    //implement this like a human being please
+    @TestOnly
+    private void temporaryParityMethod() {
+        configLoader = new ConfigLoader(this);
+        spleefWorld = configLoader.spleefWorld;
+        lobbyLocation = configLoader.lobbyLocation;
+    }
+
     @TestOnly
     public Scoreboard getScoreboard() {
         return scoreboardHandler.scoreboard;
@@ -106,6 +116,11 @@ public final class SuperSpleef extends JavaPlugin {
     @TestOnly
     public MapDimensions getMapDimensions() {
         return configLoader.mapDimensions;
+    }
+
+    @TestOnly
+    public static SuperSpleef getInstance() {
+        return getPlugin(SuperSpleef.class);
     }
 
 }

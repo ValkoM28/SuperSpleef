@@ -7,8 +7,8 @@ import org.bukkit.World;
 import org.bukkit.scoreboard.*;
 
 public class ScoreboardHandler {
-    public Scoreboard scoreboard;
-    public Objective objective;
+    private Scoreboard scoreboard;
+    private Objective objective;
 
     private final World spleefWorld;
 
@@ -31,5 +31,9 @@ public class ScoreboardHandler {
                 .count();
         Score score = objective.getScore("Alive:");
         score.setScore(alivePlayers);
+    }
+
+    public Scoreboard getScoreboard() {
+        return scoreboard;
     }
 }

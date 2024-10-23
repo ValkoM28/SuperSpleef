@@ -32,8 +32,7 @@ public class SchematicLoader {
     public SchematicLoader(SuperSpleef plugin, World spleefWorld) {
         this.plugin = plugin;
         this.spleefWorld = spleefWorld;
-        this.mapDimensions = plugin.getMapDimensions();
-
+        this.mapDimensions = plugin.getInitializer().getMapDimensions();
     }
 
     public void loadSchematic(String schematicName, Location schematicLocation) {

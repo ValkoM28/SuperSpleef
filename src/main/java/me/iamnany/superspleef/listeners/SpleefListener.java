@@ -17,7 +17,6 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -97,6 +96,7 @@ public class SpleefListener implements Listener {
             // Break the block and prevent it from dropping items
             block.setType(Material.AIR);  // Set the block to air, removing it without dropping items
         }
+
     }
 
     /*
@@ -104,15 +104,15 @@ public class SpleefListener implements Listener {
     Also - it doesnt really work :_D
      */
     @EventHandler
-    public void onPlayerDamage(EntityDamageEvent event) {
+    public void onEntityDamage(EntityDamageEvent event) {
         Entity entity = event.getEntity();
         // Check if the entity is a player
         if (entity instanceof Player) {
             Player player = (Player) entity;
 
             // Get the knockback velocity (if applicable) before cancelling damage
-            boolean temp = (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION ||
-                    event.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION);
+            boolean temp = true; //(event.getCause() != EntityDamageEvent.DamageCause.PROJECTILE &&
+                    //event.getCause() != EntityDamageEvent.DamageCause.KILL);
             Vector knockback = player.getVelocity();
             event.setCancelled(true);
 

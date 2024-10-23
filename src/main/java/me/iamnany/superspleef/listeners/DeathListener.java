@@ -27,10 +27,10 @@ public class DeathListener implements Listener {
 
     private void eliminatePlayer(Player player) {
         if (player.getGameMode() == GameMode.ADVENTURE) {
-            player.teleport(plugin.getLobbyLocation());
+            player.teleport(plugin.getInitializer().getLobbyLocation());
             player.setGameMode(GameMode.SPECTATOR);
             player.sendMessage("You have been eliminated! You are now in spectator mode.");
-            plugin.scoreboardHandler.updateScoreboard();
+            plugin.getInitializer().getScoreboardHandler().updateScoreboard();
         }
     }
 }

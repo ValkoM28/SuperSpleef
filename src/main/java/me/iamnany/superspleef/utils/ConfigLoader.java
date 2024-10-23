@@ -11,12 +11,11 @@ import java.util.Objects;
 
 public class ConfigLoader {
     private final SuperSpleef plugin;
+    private World spleefWorld;
 
-    public MapDimensions mapDimensions;
-    public Location schematicLocation;
-    public Location lobbyLocation;
-
-    public World spleefWorld;
+    private MapDimensions mapDimensions;
+    private Location schematicLocation;
+    private Location lobbyLocation;
     public String schematicName;
 
 
@@ -46,6 +45,29 @@ public class ConfigLoader {
         double lobbyY = config.getDouble("spleef.lobby.y");
         double lobbyZ = config.getDouble("spleef.lobby.z");
         this.lobbyLocation = new Location(spleefWorld, lobbyX, lobbyY, lobbyZ);
-
     }
+
+    /*
+    Getters
+     */
+    public World getSpleefWorld() {
+        return spleefWorld;
+    }
+
+    public String getSchematicName() {
+        return schematicName;
+    }
+
+    public Location getSchematicLocation() {
+        return schematicLocation;
+    }
+
+    public Location getLobbyLocation() {
+        return lobbyLocation;
+    }
+
+    public MapDimensions getMapDimensions() {
+        return mapDimensions;
+    }
+
 }

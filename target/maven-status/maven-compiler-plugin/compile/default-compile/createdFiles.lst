@@ -1,7 +1,6 @@
 me\iamnany\superspleef\utils\ConfigLoader.class
 me\iamnany\superspleef\utils\ScoreboardHandler.class
 me\iamnany\superspleef\utils\SchematicLoader.class
-me\iamnany\superspleef\commands\KitCommand.class
 me\iamnany\superspleef\MapDimensions.class
 me\iamnany\superspleef\commands\KitSelectorCommand.class
 me\iamnany\superspleef\listeners\DeathListener.class

@@ -10,16 +10,11 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -38,9 +33,12 @@ public class SpleefListener implements Listener {
      */
 
     private final HashMap<UUID, Long> lastInteractionTime = new HashMap<>();
-    private final SuperSpleef plugin;
+    private final SuperSpleef plugin;  //I know it is not used, I will either use it or remove it in the final version
 
-    public SpleefListener(SuperSpleef plugin) { this.plugin = plugin; }
+    public SpleefListener() {
+        this.plugin = SuperSpleef.getInstance();
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {  //instant block breaking logic
@@ -101,21 +99,9 @@ public class SpleefListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onPrepareCraft(PrepareItemCraftEvent event) {
-        CraftingInventory inventory = event.getInventory();
-
-        // Set the result to null to disable crafting
-        inventory.setResult(null);
-    }
-
-    @EventHandler
-    public void onItemDrop(PlayerDropItemEvent event) {
-        event.setCancelled(true);
-    }
-
     /*
     TODO: This method can be modified, so the config file enables/disables explosion knockback
+    Also - it doesnt really work :_D
      */
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {

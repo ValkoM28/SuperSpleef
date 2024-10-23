@@ -11,8 +11,9 @@ public class DeathListener implements Listener {
 
     private final SuperSpleef plugin;
 
-    public DeathListener(SuperSpleef plugin) {
-        this.plugin = plugin;
+    public DeathListener() {
+        this.plugin = SuperSpleef.getInstance();
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler

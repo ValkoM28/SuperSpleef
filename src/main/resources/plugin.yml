@@ -17,6 +17,10 @@ commands:
     description: 'Choose a kit'
     usage: '/spleefkit'
     permission: superspleef.kit
+  kitsel:
+    description: 'Choose a kit'
+    usage: '/kitsel'
+    permission: superspleef.kit
 permissions:
   superspleef.admin:
     default: op

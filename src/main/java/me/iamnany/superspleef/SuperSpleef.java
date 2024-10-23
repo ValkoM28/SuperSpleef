@@ -1,6 +1,7 @@
 package me.iamnany.superspleef;
 
-import me.iamnany.superspleef.commands.KitCommand;
+import me.iamnany.superspleef.commands.KitSelectorCommand;
+import me.iamnany.superspleef.listeners.InventoryListener;
 import me.iamnany.superspleef.utils.ConfigLoader;
 import me.iamnany.superspleef.listeners.DeathListener;
 import me.iamnany.superspleef.listeners.SpleefListener;
@@ -8,7 +9,6 @@ import me.iamnany.superspleef.utils.SchematicLoader;
 import me.iamnany.superspleef.utils.ScoreboardHandler;
 import org.bukkit.*;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,10 +30,13 @@ public final class SuperSpleef extends JavaPlugin {
         saveDefaultConfig();
         temporaryParityMethod();  //I am going to kill you, if you leave it like this
 
-        getServer().getPluginManager().registerEvents(new SpleefListener(this), this);
-        getServer().getPluginManager().registerEvents(new DeathListener(this), this);
+        getServer().getPluginManager().registerEvents(new SpleefListener(), this);
+        getServer().getPluginManager().registerEvents(new DeathListener(), this);
+        getServer().getPluginManager().registerEvents(new InventoryListener(), this);
+        // new KitSelector(this);
 
-        getCommand("spleefkit").setExecutor(new KitCommand());
+        getCommand("kitsel").setExecutor(new KitSelectorCommand());
+
         //getServer().getPluginManager().registerEvents()
         scoreboardHandler = new ScoreboardHandler(this, spleefWorld);
         getLogger().info("SpleefMinigame has been enabled!");

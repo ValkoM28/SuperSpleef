@@ -1,6 +1,7 @@
 package me.iamnany.superspleef;
 
 import me.iamnany.superspleef.commands.KitSelectorCommand;
+import me.iamnany.superspleef.gamestarter.GameStarter;
 import me.iamnany.superspleef.listeners.InventoryListener;
 import me.iamnany.superspleef.utils.ConfigLoader;
 import me.iamnany.superspleef.listeners.DeathListener;
@@ -25,19 +26,17 @@ public final class SuperSpleef extends JavaPlugin {
 
     public ScoreboardHandler scoreboardHandler;
 
+    private GameStarter gameStarter;
     @Override
     public void onEnable() {  // Plugin startup logic
         saveDefaultConfig();
         temporaryParityMethod();  //I am going to kill you, if you leave it like this
 
-        getServer().getPluginManager().registerEvents(new SpleefListener(), this);
-        getServer().getPluginManager().registerEvents(new DeathListener(), this);
-        getServer().getPluginManager().registerEvents(new InventoryListener(), this);
-        // new KitSelector(this);
+        //slowly move startup logic to GameStarter class
+        gameStarter = new GameStarter();
+        gameStarter.initiateListeners();
+        gameStarter.initiateCommands();
 
-        getCommand("kitsel").setExecutor(new KitSelectorCommand());
-
-        //getServer().getPluginManager().registerEvents()
         scoreboardHandler = new ScoreboardHandler(this, spleefWorld);
         getLogger().info("SpleefMinigame has been enabled!");
     }
@@ -77,7 +76,7 @@ public final class SuperSpleef extends JavaPlugin {
 
             if (player.hasPermission("superspleef.kit.archer")) {
                player.getInventory().addItem(new ItemStack(Material.BOW));
-                player.getInventory().addItem(new ItemStack(Material.ARROW, 3));
+               player.getInventory().addItem(new ItemStack(Material.ARROW, 3));
             }
         }
         scoreboardHandler.updateScoreboard();

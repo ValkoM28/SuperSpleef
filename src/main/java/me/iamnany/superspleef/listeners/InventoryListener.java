@@ -1,5 +1,6 @@
 package me.iamnany.superspleef.listeners;
 
+import me.iamnany.superspleef.SuperSpleef;
 import me.iamnany.superspleef.utils.KitSelector;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,6 +13,12 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 
 public class InventoryListener implements Listener {
+    private final SuperSpleef plugin;
+    public InventoryListener() {
+        this.plugin = SuperSpleef.getInstance();
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
 

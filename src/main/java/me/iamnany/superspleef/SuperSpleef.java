@@ -1,11 +1,7 @@
 package me.iamnany.superspleef;
 
-import me.iamnany.superspleef.commands.KitSelectorCommand;
 import me.iamnany.superspleef.gamestarter.GameStarter;
-import me.iamnany.superspleef.listeners.InventoryListener;
 import me.iamnany.superspleef.utils.ConfigLoader;
-import me.iamnany.superspleef.listeners.DeathListener;
-import me.iamnany.superspleef.listeners.SpleefListener;
 import me.iamnany.superspleef.utils.SchematicLoader;
 import me.iamnany.superspleef.utils.ScoreboardHandler;
 import org.bukkit.*;

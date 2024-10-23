@@ -4,6 +4,7 @@ me\iamnany\superspleef\utils\SchematicLoader.class
 me\iamnany\superspleef\MapDimensions.class
 me\iamnany\superspleef\commands\KitSelectorCommand.class
 me\iamnany\superspleef\listeners\DeathListener.class
+me\iamnany\superspleef\gamestarter\GameStarter.class
 me\iamnany\superspleef\listeners\SpleefListener.class
 me\iamnany\superspleef\listeners\InventoryListener.class
 me\iamnany\superspleef\utils\KitSelector.class
